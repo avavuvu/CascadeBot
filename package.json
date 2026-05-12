@@ -1,0 +1,14 @@
+{
+	"name": "cascade-dev",
+	"private": true,
+	"scripts": {
+		"dev:vis": "npm run dev --prefix vis",
+		"dev:thoughts": "python3 code/thought_server.py",
+		"dev:container": "docker stop cascade && docker start cascade",
+		"dev:referee": "npm run dev:container && docker exec -w /workspaces/school/COMP30024/assignment2/code cascade /.venv/bin/python -m referee agent agent -S",
+		"dev": "concurrently --names \"Vis,ThS,Ref\" --prefix-colors \"cyan,yellow,magenta\" --kill-others-on-fail \"npm run dev:vis\" \"npm run dev:thoughts\" \"npm run dev:referee\""
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.2"
+	}
+}
