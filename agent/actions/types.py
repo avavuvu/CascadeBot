@@ -9,6 +9,11 @@ PLACE_ACTION = np.uint8(3)
 
 
 @dataclass(frozen=True, slots=True)
+class PlaceAction:
+    coord: int
+
+
+@dataclass(frozen=True, slots=True)
 class MoveAction:
     source: int
     dest: int
@@ -29,4 +34,4 @@ class CascadeAction:
     destinations: tuple[int, ...]
 
 
-Action = MoveAction | EatAction | CascadeAction
+Action = PlaceAction | MoveAction | EatAction | CascadeAction

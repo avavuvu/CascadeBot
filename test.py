@@ -1,35 +1,37 @@
-import numpy as np
+import math
+import time
 
-from agent.actions import (
-    decode_action,
-    format_action,
-    generate_legal_actions,
-)
-from agent.actions.types import CASCADE_ACTION, EAT_ACTION, MOVE_ACTION
+from agent.actions.generator import format_action
 from agent.board import Board
 from agent.piece import Piece
 from agent.player_color import PlayerColor
-
-board = Board()
-board.board[25] = Piece.BLUE.of_height(4)
-board.board[26] = Piece.RED.of_height(4)
-board.board[26 + 8] = Piece.RED.of_height(4)
+from agent.search.search import get_best_move
 
 
-def action_generator(depth=6, color=PlayerColor.RED):
-    if depth == 0:
-        return 1
+def test():
+    board = Board()
 
-    actions = generate_legal_actions(board, color)
+    board.board[4] = Piece.of(4, PlayerColor.BLUE)
+    board.board[5] = Piece.of(4, PlayerColor.BLUE)
+    board.board[32] = Piece.of(4, PlayerColor.BLUE)
+    board.board[56] = Piece.of(4, PlayerColor.BLUE)
 
-    positions = 0
+    board.board[2] = Piece.of(4, PlayerColor.RED)
+    board.board[19] = Piece.of(4, PlayerColor.RED)
+    board.board[33] = Piece.of(4, PlayerColor.RED)
+    board.board[56] = Piece.of(4, PlayerColor.RED)
 
-    for i in actions:
-        board.make_move(i, color)
-        positions += action_generator(depth - 1, color.opponent())
-        board.unmake_move()
+    start = time.perf_counter()
+    move = get_best_move(board, PlayerColor.BLUE, 6)
+    elapsed = time.perf_counter() - start
 
-    return positions
+    if move is None:
+        print("move is None, likely error")
+        return
+
+    print(board)
+    print(format_action(move))
+    print(f"Time: {elapsed:.3f}s")
 
 
-print(action_generator())
+test()

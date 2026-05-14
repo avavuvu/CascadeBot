@@ -1,8 +1,7 @@
 import numpy as np
 
-from agent.actions.types import CASCADE_ACTION, EAT_ACTION, MOVE_ACTION, PLACE_ACTION
-from agent.piece import Piece
-
+from .actions.types import CASCADE_ACTION, EAT_ACTION, MOVE_ACTION, PLACE_ACTION
+from .piece import Piece
 from .player_color import PlayerColor
 
 
@@ -31,14 +30,27 @@ def _push_stack(board: np.ndarray, pos: int, direction: int) -> None:
 
 
 class Board:
+    PLACE_TURNS = 8  # 4 placements per player
+
     def __init__(self):
         self.board = np.zeros(64, dtype=np.uint8)
-
+        self._turn: int = 0
         self._history: list[np.ndarray] = []
+        self._turn_history: list[int] = []
+
+    @property
+    def is_place_phase(self) -> bool:
+        return self._turn < self.PLACE_TURNS
+
+    @property
+    def is_place_book(self) -> bool:
+        return self._turn < 4
 
     def make_move(self, action: np.void, color: PlayerColor):
 
         self._history.append(self.board.copy())
+        self._turn_history.append(self._turn)
+        self._turn += 1
 
         if int(action["type"]) == int(CASCADE_ACTION):
             source = int(action["source"])
@@ -75,12 +87,13 @@ class Board:
         elif int(action["type"]) == int(PLACE_ACTION):
             coord = int(action["coord"])
 
-            self.board[coord] = Piece.of(4, color)
+            self.board[coord] = Piece.of(3, color)
 
     def unmake_move(self) -> bool:
         if not self._history:
             return False
         self.board[:] = self._history.pop()
+        self._turn = self._turn_history.pop()
         return True
 
     def is_color(self, index: int, color: PlayerColor) -> bool:
