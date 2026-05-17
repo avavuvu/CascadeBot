@@ -21,14 +21,8 @@ FLAG_UPPER = np.uint8(2)
 
 
 class TranspositionTable:
-    """Simple dict-backed transposition table."""
-
     def __init__(self) -> None:
         self._table: dict[int, np.void] = {}
-
-    # ------------------------------------------------------------------
-    # Probing
-    # ------------------------------------------------------------------
 
     def probe(
         self,
@@ -58,10 +52,6 @@ class TranspositionTable:
             return int(entry["score"])  # real score <= alpha -> cut off
 
         return None
-
-    # ------------------------------------------------------------------
-    # Storing
-    # ------------------------------------------------------------------
 
     def store(self, key: int, depth: int, score: int, flag: int | np.uint8) -> None:
         existing = self._table.get(key)

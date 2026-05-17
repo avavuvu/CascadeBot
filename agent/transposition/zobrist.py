@@ -23,3 +23,42 @@ def calculate_zobrist(board: np.ndarray, color: PlayerColor) -> int:
     if color == PlayerColor.BLUE:
         key ^= SIDE_KEY
     return int(key)
+
+
+# def calculate_zobrist(board: np.ndarray, color: PlayerColor):
+#     def flip_h(a):
+#         return np.fliplr(a.reshape(8, 8)).ravel()
+
+#     def flip_v(a):
+#         return np.flipud(a.reshape(8, 8)).ravel()
+
+#     def rot90_cw(a):
+#         return np.rot90(a.reshape(8, 8), k=-1).ravel()
+
+#     def rot90_ccw(a):
+#         return np.rot90(a.reshape(8, 8), k=1).ravel()
+
+#     def rot180(a):
+#         return np.rot90(a.reshape(8, 8), k=2).ravel()
+
+#     def transpose(a):
+#         return a.reshape(8, 8).T.ravel()
+
+#     def anti_transpose(a):
+#         return np.rot90(a.reshape(8, 8), k=2).T.ravel()
+
+#     transpositions = [
+#         _calculate_individual_zobrist(b, color)
+#         for b in [
+#             board,
+#             flip_h(board),
+#             flip_v(board),
+#             rot90_cw(board),
+#             rot90_ccw(board),
+#             rot180(board),
+#             transpose(board),
+#             anti_transpose(board),
+#         ]
+#     ]
+
+#     return min(transpositions)

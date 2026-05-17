@@ -121,6 +121,8 @@ class Agent:
 
         print(f"position has been reached {entry + 1} times")
 
+        self._trans_table.clear()
+
 
 def _make_np_action(
     action_type: int | np.unsignedinteger,

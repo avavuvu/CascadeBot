@@ -77,14 +77,14 @@ def _search(
     board: Board,
     alpha: int,
     beta: int,
-    key: int,
+    node_key: int,
     trans_table: TranspositionTable,
     color=PlayerColor.RED,
     depth=6,
 ) -> int:
     original_alpha = alpha
 
-    cached = trans_table.probe(key, depth, alpha, beta)
+    cached = trans_table.probe(node_key, depth, alpha, beta)
     if cached is not None:
         return cached
 
@@ -110,13 +110,13 @@ def _search(
         board.unmake_move()
 
         if score >= beta:
-            trans_table.store(key, depth, score, FLAG_LOWER)
+            trans_table.store(node_key, depth, score, FLAG_LOWER)
             return beta
 
         alpha = max(alpha, score)
 
     if trans_table is not None:
         flag = FLAG_UPPER if alpha <= original_alpha else FLAG_EXACT
-        trans_table.store(key, depth, alpha, flag)
+        trans_table.store(node_key, depth, alpha, flag)
 
     return alpha
