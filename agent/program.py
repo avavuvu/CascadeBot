@@ -3,6 +3,8 @@
 #
 import numpy as np
 
+from agent.transposition.table import TranspositionTable
+from agent.transposition.zobrist import calculate_zobrist
 from referee.game import (
     Action as RAction,
 )
@@ -65,6 +67,8 @@ class Agent:
         self._color = PlayerColor.RED if color == RPlayerColor.RED else PlayerColor.BLUE
         self._turn_count = 0
         self._board = Board()
+        self._played_table: dict[int, int] = {}
+        self._trans_table = TranspositionTable()
 
     def action(self, **referee: dict) -> RAction:
         """
@@ -72,7 +76,15 @@ class Agent:
         to take an action. It must always return an action object.
         """
 
-        action = get_best_move(self._board, self._color, 4)
+        action, score = get_best_move(
+            self._board,
+            self._color,
+            self._played_table,
+            self._trans_table,
+            5,
+        )
+
+        print(f"{self._color.name}'s best score: {score}")
 
         if action is None:
             raise Exception("Likely error: Action is none")
@@ -98,9 +110,16 @@ class Agent:
 
         agent_aciton = convert_action_from_referee_to_agent(action, self._board)
 
-        print(format_action(agent_aciton))
-
         self._board.make_move(agent_aciton, action_color)
+
+        # print(f"{self._color.name}\n{self._board}")
+
+        key = calculate_zobrist(self._board.board, action_color)
+        entry = self._played_table.get(key) or 0
+
+        self._played_table.update({key: entry + 1})
+
+        print(f"position has been reached {entry + 1} times")
 
 
 def _make_np_action(

@@ -12,13 +12,15 @@ def evaluate(board: Board, color: PlayerColor) -> int:
     eval = red_eval - blue_eval
 
     pieces = int(np.sum(board.board & np.uint8(0x0F)))
-    percentage = 24 / pieces
+    percentage = pieces / 24
 
     endgame_weight = 1 - percentage
 
-    engame_eval = int(_endgame_distance_eval(board, color) * endgame_weight)
+    endgame_eval = int(_endgame_distance_eval(board, color) * endgame_weight)
 
-    return (eval * (-1 if color == PlayerColor.BLUE else 1)) + engame_eval
+    # print(f"eval: {eval}, endgame: {endgame_eval}")
+
+    return (eval * 10) + endgame_eval
 
 
 def _count_material(board: Board, color: PlayerColor) -> int:
