@@ -19,10 +19,10 @@ def evaluate(board: Board, color: PlayerColor) -> int:
     # Scales from 0 (all pieces on board) → 1 (pieces have been taken)
     endgame_weight = 1.0 - pieces / 24.0
 
-    if material_eval > 0:
-        positional = _winning_eval(board, color)
-    else:
-        positional = _losing_eval(board, color)
+    positional = _winning_eval(board, color)
+    # if material_eval > 0:
+    # else:
+    #     positional = _losing_eval(board, color)
 
     return material_eval * 10 + int(positional * endgame_weight)
 
